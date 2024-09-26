@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace NetForeMostTestBlogsProject.Api.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240926045441_BlogCategoryMigration")]
-    partial class BlogCategoryMigration
+    [Migration("20240926190159_entitiesMigration")]
+    partial class entitiesMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -51,7 +51,7 @@ namespace NetForeMostTestBlogsProject.Api.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Blog");
+                    b.ToTable("Blog", (string)null);
                 });
 
             modelBuilder.Entity("NetForeMostTestBlogsProject.Domain.Entities.BlogCategory", b =>
@@ -92,7 +92,7 @@ namespace NetForeMostTestBlogsProject.Api.Migrations
 
                     b.HasKey("CategoryId");
 
-                    b.ToTable("Category");
+                    b.ToTable("Category", (string)null);
                 });
 
             modelBuilder.Entity("NetForeMostTestBlogsProject.Domain.Entities.User", b =>
@@ -149,13 +149,13 @@ namespace NetForeMostTestBlogsProject.Api.Migrations
             modelBuilder.Entity("NetForeMostTestBlogsProject.Domain.Entities.BlogCategory", b =>
                 {
                     b.HasOne("NetForeMostTestBlogsProject.Domain.Entities.Blog", "Blog")
-                        .WithMany("BlogCategories")
+                        .WithMany()
                         .HasForeignKey("BlogId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("NetForeMostTestBlogsProject.Domain.Entities.Category", "Category")
-                        .WithMany("BlogCategories")
+                        .WithMany()
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -167,16 +167,6 @@ namespace NetForeMostTestBlogsProject.Api.Migrations
                     b.Navigation("Blog");
 
                     b.Navigation("Category");
-                });
-
-            modelBuilder.Entity("NetForeMostTestBlogsProject.Domain.Entities.Blog", b =>
-                {
-                    b.Navigation("BlogCategories");
-                });
-
-            modelBuilder.Entity("NetForeMostTestBlogsProject.Domain.Entities.Category", b =>
-                {
-                    b.Navigation("BlogCategories");
                 });
 
             modelBuilder.Entity("NetForeMostTestBlogsProject.Domain.Entities.User", b =>

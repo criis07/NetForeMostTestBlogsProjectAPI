@@ -26,18 +26,46 @@ namespace NetForeMostTestBlogsProject.Infrastructure.Persistence.DataServices.Bl
 
         public async Task<CreateBlogEntryResponse> CreateBlogEntryAsync(CreateBlogEntryCommand blog)
         {
-            var result = _applicationDbContext.blogs.Add(new Blog
+
+            // Paso 1: Obtener las categorías desde la base de datos utilizando los IDs proporcionados.
+            var categories = await _applicationDbContext.categories
+                .Where(c => blog.CategoryIds.Contains(c.CategoryId))
+                .ToListAsync();
+            // Verifica si el usuario existe
+            var userExists = await _applicationDbContext.users.AnyAsync(u => u.Id == blog.UserId);
+            if (!userExists)
+            {
+                return new CreateBlogEntryResponse { Success = false, Message = "User does not exist" };
+            }
+            // Paso 2: Crear el blog.
+            var newBlog = new Blog
             {
                 Title = blog.Title,
                 Content = blog.Content,
                 PublicationDate = DateTime.UtcNow,
-                UserId = blog.UserId,
-            });
+                UserId = blog.UserId,  // Asumiendo que UserId es el ID del autor
+                BlogCategories = new List<BlogCategory>()  // Inicializar la lista de BlogCategories
+            };
 
+            // Paso 3: Relacionar el blog con las categorías.
+            foreach (var category in categories)
+            {
+                newBlog.BlogCategories.Add(new BlogCategory
+                {
+                    Blog = newBlog,
+                    Category = category
+                });
+            }
+
+            // Paso 4: Agregar el blog a la base de datos.
+            _applicationDbContext.blogs.Add(newBlog);
+
+            // Paso 5: Guardar los cambios.
             await _applicationDbContext.SaveChangesAsync();
 
             return new CreateBlogEntryResponse { Success = true, Message = "Entry created" };
         }
+
 
         public async Task<DeleteBlogEntryResponse> DeleteBlogEntryAsync(DeleteBlogEntryCommand blogInformation)
         {
@@ -60,10 +88,22 @@ namespace NetForeMostTestBlogsProject.Infrastructure.Persistence.DataServices.Bl
             }
         }
 
-        public async Task<IEnumerable<Blog>> GetAllBlogEntriesAsync(CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<GetBlogEntryDTO>> GetAllBlogEntriesAsync(CancellationToken cancellationToken = default)
         {
-            return await _applicationDbContext.blogs.ToListAsync(cancellationToken);
+            return await _applicationDbContext.blogs
+                .Include(b => b.BlogCategories) // Asegúrate de que BlogCategories está correctamente definido en el modelo Blog
+                .Select(b => new GetBlogEntryDTO
+                {
+                    BlogId = b.BlogId, // Asegúrate de que esta propiedad existe en la entidad Blog
+                    Title = b.Title,
+                    Content = b.Content,
+                    PublicationDate = b.PublicationDate.ToString("g"), // Ajusta el formato según lo necesites
+                    UserId = b.UserId,
+                    CategoryNames = b.BlogCategories.Select(bc => bc.Category.Name) // Solo toma los nombres de las categorías
+                })
+                .ToListAsync(cancellationToken);
         }
+
 
         public async Task<GetBlogEntryDTO> GetBlogEntryByIdAsync(GetBlogEntryByIdQuery blogInformation)
         {

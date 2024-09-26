@@ -17,6 +17,7 @@ using NetForeMostTestBlogsProject.Application.Interfaces.Persistence.DataService
 using NetForeMostTestBlogsProject.Infrastructure.Persistence.DataServices.BlogEntryService;
 using NetForeMostTestBlogsProject.Infrastructure.Persistence.DataServices.CategoryService;
 using NetForeMostTestBlogsProject.Application.Interfaces.Persistence.DataServices.Category;
+using NetForeMostTestBlogsProject.Api.Middleware;
 
 public class Program
 {
@@ -120,7 +121,7 @@ public class Program
             }
             await next();
         });
-
+        app.UseMiddleware<ApiKeyMiddleware>();
         app.UseAuthorization();
 
         app.MapHealthChecks("/health");

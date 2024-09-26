@@ -15,7 +15,7 @@ namespace NetForeMostTestBlogsProject.Application.Interfaces.Persistence.DataSer
         Task<CreateBlogEntryResponse> CreateBlogEntryAsync(CreateBlogEntryCommand blog);
         Task<UpdateBlogEntryResponse> UpdateBlogEntryAsync(UpdateBlogEntryCommand blog);
         Task<DeleteBlogEntryResponse> DeleteBlogEntryAsync(DeleteBlogEntryCommand blog);
-        Task<IEnumerable<Blog>> GetAllBlogEntriesAsync(CancellationToken cancellationToken = default);
+        Task<IEnumerable<GetBlogEntryDTO>> GetAllBlogEntriesAsync(CancellationToken cancellationToken = default);
         Task<GetBlogEntryDTO> GetBlogEntryByIdAsync(GetBlogEntryByIdQuery blog);
     }
 }
