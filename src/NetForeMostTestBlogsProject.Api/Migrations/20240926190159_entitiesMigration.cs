@@ -4,18 +4,47 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
-
 namespace NetForeMostTestBlogsProject.Api.Migrations
 {
     /// <inheritdoc />
-    public partial class BlogCategoryMigration : Migration
+    public partial class entitiesMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "person");
+            migrationBuilder.CreateTable(
+                name: "Category",
+                columns: table => new
+                {
+                    CategoryId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Category", x => x.CategoryId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "User",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "character varying(25)", maxLength: 25, nullable: true),
+                    LastName = table.Column<string>(type: "character varying(25)", maxLength: 25, nullable: true),
+                    Email = table.Column<string>(type: "text", nullable: true),
+                    Password = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: true),
+                    Avatar = table.Column<string>(type: "text", nullable: true),
+                    Status = table.Column<string>(type: "text", nullable: true),
+                    Active = table.Column<bool>(type: "boolean", nullable: false),
+                    RegistrationDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_User", x => x.Id);
+                });
 
             migrationBuilder.CreateTable(
                 name: "Blog",
@@ -37,20 +66,6 @@ namespace NetForeMostTestBlogsProject.Api.Migrations
                         principalTable: "User",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Category",
-                columns: table => new
-                {
-                    CategoryId = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Category", x => x.CategoryId);
                 });
 
             migrationBuilder.CreateTable(
@@ -111,34 +126,8 @@ namespace NetForeMostTestBlogsProject.Api.Migrations
             migrationBuilder.DropTable(
                 name: "Category");
 
-            migrationBuilder.CreateTable(
-                name: "person",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Active = table.Column<bool>(type: "boolean", nullable: false),
-                    CreatedBy = table.Column<int>(type: "integer", nullable: false),
-                    CreatedOn = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    FirstName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    LastName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    ModifiedBy = table.Column<int>(type: "integer", nullable: true),
-                    ModifiedOn = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_person", x => x.Id);
-                });
-
-            migrationBuilder.InsertData(
-                table: "person",
-                columns: new[] { "Id", "Active", "CreatedBy", "CreatedOn", "FirstName", "LastName", "ModifiedBy", "ModifiedOn" },
-                values: new object[,]
-                {
-                    { 1, true, 1, new DateTime(2024, 9, 26, 1, 7, 7, 814, DateTimeKind.Utc).AddTicks(8953), "Brandon", "Smith", null, null },
-                    { 2, true, 1, new DateTime(2024, 9, 26, 1, 7, 7, 814, DateTimeKind.Utc).AddTicks(8955), "Allison", "Brown", null, null },
-                    { 3, false, 1, new DateTime(2024, 9, 26, 1, 7, 7, 814, DateTimeKind.Utc).AddTicks(8956), "Patricia", "McDonald", null, null }
-                });
+            migrationBuilder.DropTable(
+                name: "User");
         }
     }
 }

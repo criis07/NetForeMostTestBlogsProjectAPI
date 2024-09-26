@@ -48,7 +48,7 @@ namespace NetForeMostTestBlogsProject.Api.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Blog");
+                    b.ToTable("Blog", (string)null);
                 });
 
             modelBuilder.Entity("NetForeMostTestBlogsProject.Domain.Entities.BlogCategory", b =>
@@ -89,7 +89,7 @@ namespace NetForeMostTestBlogsProject.Api.Migrations
 
                     b.HasKey("CategoryId");
 
-                    b.ToTable("Category");
+                    b.ToTable("Category", (string)null);
                 });
 
             modelBuilder.Entity("NetForeMostTestBlogsProject.Domain.Entities.User", b =>
@@ -146,13 +146,13 @@ namespace NetForeMostTestBlogsProject.Api.Migrations
             modelBuilder.Entity("NetForeMostTestBlogsProject.Domain.Entities.BlogCategory", b =>
                 {
                     b.HasOne("NetForeMostTestBlogsProject.Domain.Entities.Blog", "Blog")
-                        .WithMany("BlogCategories")
+                        .WithMany()
                         .HasForeignKey("BlogId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("NetForeMostTestBlogsProject.Domain.Entities.Category", "Category")
-                        .WithMany("BlogCategories")
+                        .WithMany()
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -164,16 +164,6 @@ namespace NetForeMostTestBlogsProject.Api.Migrations
                     b.Navigation("Blog");
 
                     b.Navigation("Category");
-                });
-
-            modelBuilder.Entity("NetForeMostTestBlogsProject.Domain.Entities.Blog", b =>
-                {
-                    b.Navigation("BlogCategories");
-                });
-
-            modelBuilder.Entity("NetForeMostTestBlogsProject.Domain.Entities.Category", b =>
-                {
-                    b.Navigation("BlogCategories");
                 });
 
             modelBuilder.Entity("NetForeMostTestBlogsProject.Domain.Entities.User", b =>
