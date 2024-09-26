@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace NetForeMostTestBlogsProject.Application.DTO.Users
 {
-    public record RegisterUserDTO
+    public class RegisterUserDTO
     {
         [Required]
         public string? Name { get; set; } = string.Empty;

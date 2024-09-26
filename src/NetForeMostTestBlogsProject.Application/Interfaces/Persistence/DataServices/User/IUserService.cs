@@ -15,5 +15,7 @@ namespace NetForeMostTestBlogsProject.Application.Interfaces.Persistence.DataSer
         Task<LoginResponse> LoginUserAsync(LoginDTO loginData);
         Task<GetUserInfo> GetUserInfoAsync(int id);
         Task<LoginResponse>SignInWithTokenAsync(string accessToken);
+        Task<UpdateUserResponse> UpdateUserAsync(UpdateUserDTO user);
+        Task<DeleteUserResponse> DeleteUserAsync(int id);
     }
 }
