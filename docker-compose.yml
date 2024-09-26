@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Server=database;Port=5432;Database=BlogsNetForeMostBD;User Id=rootuser;Password=rootMasterUser1990*;
+    depends_on:
+      - database
+
+  database:
+    image: postgres:16.3
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: rootuser
+      POSTGRES_PASSWORD: rootMasterUser1990*
+      POSTGRES_DB: BlogsNetForeMostBD
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
