@@ -1,5 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NetForeMostTestBlogsProject.Api.Extensions;
@@ -24,6 +25,7 @@ namespace NetForeMostTestBlogsProject.Api.Controllers
 
         [HttpPost]
         [Route("/api/category")]
+        [Authorize]
         public async Task<ActionResult> CreateCategory([FromBody] CreateCategoryCommand command)
         {
             var result = await _mediator.Send(command);
@@ -32,6 +34,7 @@ namespace NetForeMostTestBlogsProject.Api.Controllers
 
         [HttpGet]
         [Route("/api/categories")]
+        [Authorize]
         public async Task<ActionResult> GetAllCategories()
         {
             var request = new GetAllCategoriesQuery();
@@ -41,6 +44,7 @@ namespace NetForeMostTestBlogsProject.Api.Controllers
 
         [HttpGet]
         [Route("/api/category/{id}")]
+        [Authorize]
         public async Task<ActionResult> GetCategoryById([FromRoute] int id)
         {
             var request = new GetCategoryByIdQuery { CategoryId = id };

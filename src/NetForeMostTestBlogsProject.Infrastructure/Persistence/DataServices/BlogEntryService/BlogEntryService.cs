@@ -43,8 +43,8 @@ namespace NetForeMostTestBlogsProject.Infrastructure.Persistence.DataServices.Bl
                 Title = blog.Title,
                 Content = blog.Content,
                 PublicationDate = DateTime.UtcNow,
-                UserId = blog.UserId,  // Asumiendo que UserId es el ID del autor
-                BlogCategories = new List<BlogCategory>()  // Inicializar la lista de BlogCategories
+                UserId = blog.UserId,  
+                BlogCategories = new List<BlogCategory>()
             };
 
             // Paso 3: Relacionar el blog con las categorías.
@@ -91,15 +91,15 @@ namespace NetForeMostTestBlogsProject.Infrastructure.Persistence.DataServices.Bl
         public async Task<IEnumerable<GetBlogEntryDTO>> GetAllBlogEntriesAsync(CancellationToken cancellationToken = default)
         {
             return await _applicationDbContext.blogs
-                .Include(b => b.BlogCategories) // Asegúrate de que BlogCategories está correctamente definido en el modelo Blog
+                .Include(b => b.BlogCategories) 
                 .Select(b => new GetBlogEntryDTO
                 {
-                    BlogId = b.BlogId, // Asegúrate de que esta propiedad existe en la entidad Blog
+                    BlogId = b.BlogId, 
                     Title = b.Title,
                     Content = b.Content,
-                    PublicationDate = b.PublicationDate.ToString("g"), // Ajusta el formato según lo necesites
+                    PublicationDate = b.PublicationDate.ToString("g"), 
                     UserId = b.UserId,
-                    CategoryNames = b.BlogCategories.Select(bc => bc.Category.Name) // Solo toma los nombres de las categorías
+                    CategoryNames = b.BlogCategories.Select(bc => bc.Category.Name) 
                 })
                 .ToListAsync(cancellationToken);
         }

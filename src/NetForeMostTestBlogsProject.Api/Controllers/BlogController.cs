@@ -1,5 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NetForeMostTestBlogsProject.Api.Extensions;
 using NetForeMostTestBlogsProject.Application.Endpoints.BlogEntry.Commands;
@@ -22,6 +23,7 @@ namespace NetForeMostTestBlogsProject.Api.Controllers
 
         [HttpPost]
         [Route("/api/blog")]
+        [Authorize]
         public async Task<ActionResult> CreateBlogEntry([FromBody] CreateBlogEntryCommand command)
         {
             var result = await _mediator.Send(command);
@@ -30,6 +32,7 @@ namespace NetForeMostTestBlogsProject.Api.Controllers
 
         [HttpPut]
         [Route("/api/blog/{id}")]
+        [Authorize]
         public async Task<ActionResult> UpdateBlogEntry([FromRoute] int id,[FromBody] CreateBlogEntryCommand Command)
         {
             var request = new UpdateBlogEntryCommand
@@ -45,6 +48,7 @@ namespace NetForeMostTestBlogsProject.Api.Controllers
 
         [HttpDelete]
         [Route("/api/blog/{id}")]
+        [Authorize]
         public async Task<ActionResult> DeleteBlogEntry([FromRoute] int id)
         {
             var request = new DeleteBlogEntryCommand
@@ -57,6 +61,7 @@ namespace NetForeMostTestBlogsProject.Api.Controllers
 
         [HttpGet]
         [Route("/api/blogs")]
+        [Authorize]
         public async Task<ActionResult> GetAllBlogEntries()
         {
             var request = new GetAllBlogEntriesQuery();
@@ -66,6 +71,7 @@ namespace NetForeMostTestBlogsProject.Api.Controllers
 
         [HttpGet]
         [Route("/api/blog/{id}")]
+        [Authorize]
         public async Task<ActionResult> GetBlogEntryById([FromRoute] int id)
         {
             var request = new GetBlogEntryByIdQuery { BlogId = id };
