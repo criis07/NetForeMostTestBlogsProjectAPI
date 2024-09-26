@@ -51,9 +51,17 @@ namespace NetForeMostTestBlogsProject.Api.Controllers
         [HttpPut]
         [Authorize]
         [Route("/api/user/{id}")]
-        public async Task<ActionResult> UpdateUser([FromRoute] int id, [FromBody] UpdateUserCommand command)
+        public async Task<ActionResult> UpdateUser([FromRoute] int id, [FromBody] RegisterCommand command)
         {
-            var result = await _mediator.Send(command);
+            var request = new UpdateUserCommand
+            {
+                Email = command.Email,
+                id = id,
+                Name = command.Name,
+                LastName = command.LastName,
+                Password = command.Password
+            };
+            var result = await _mediator.Send(request);
             return result.ToActionResult();
         }
 
