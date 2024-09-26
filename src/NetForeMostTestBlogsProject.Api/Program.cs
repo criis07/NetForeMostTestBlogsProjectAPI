@@ -13,6 +13,8 @@ using NetForeMostTestBlogsProject.Application.Interfaces.Persistence;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using NetForeMostTestBlogsProject.Application.Interfaces.Persistence.DataServices.BlogEntry;
+using NetForeMostTestBlogsProject.Infrastructure.Persistence.DataServices.BlogEntryService;
 
 public class Program
 {
@@ -29,6 +31,7 @@ public class Program
             options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
         builder.Services.AddScoped<IUserService, UserService>();
+        builder.Services.AddScoped<IBlogEntryService, BlogEntryService>();
 
         // Adds in Application dependencies
         builder.Services.AddApplication(builder.Configuration);
