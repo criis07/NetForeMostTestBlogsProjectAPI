@@ -15,6 +15,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using NetForeMostTestBlogsProject.Application.Interfaces.Persistence.DataServices.BlogEntry;
 using NetForeMostTestBlogsProject.Infrastructure.Persistence.DataServices.BlogEntryService;
+using NetForeMostTestBlogsProject.Infrastructure.Persistence.DataServices.CategoryService;
+using NetForeMostTestBlogsProject.Application.Interfaces.Persistence.DataServices.Category;
 
 public class Program
 {
@@ -32,6 +34,7 @@ public class Program
 
         builder.Services.AddScoped<IUserService, UserService>();
         builder.Services.AddScoped<IBlogEntryService, BlogEntryService>();
+        builder.Services.AddScoped<ICategoryService, CategoryService>();
 
         // Adds in Application dependencies
         builder.Services.AddApplication(builder.Configuration);
