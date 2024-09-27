@@ -45,6 +45,15 @@ public class Program
         builder.Services.AddHttpContextAccessor();
         builder.Services.AddHealthChecks();
 
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("AllowLocalhostPolicy", builder =>
+            {
+                builder.WithOrigins("http://localhost:4200")
+                       .AllowAnyHeader()
+                       .AllowAnyMethod();
+            });
+        });
 
         builder.Services.AddAuthentication(options =>
         {
@@ -77,15 +86,7 @@ public class Program
 
         builder.Services.AddScoped<IPrincipalService, PrincipalService>();
 
-        builder.Services.AddCors(options =>
-        {
-            options.AddPolicy("AllowAllPolicy", builder =>
-            {
-                builder.AllowAnyOrigin()   // Permitir cualquier origen
-                       .AllowAnyHeader()   // Permitir cualquier encabezado
-                       .AllowAnyMethod();  // Permitir cualquier método (GET, POST, etc.)
-            });
-        });
+
 
 
         builder.Services.AddControllers().AddJsonOptions(options =>
@@ -121,6 +122,7 @@ public class Program
             }
             await next();
         });
+        app.UseCors("AllowLocalhostPolicy");
         app.UseMiddleware<ApiKeyMiddleware>();
         app.UseAuthorization();
 
