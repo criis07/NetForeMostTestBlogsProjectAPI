@@ -13,6 +13,11 @@ using NetForeMostTestBlogsProject.Application.Interfaces.Persistence;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using NetForeMostTestBlogsProject.Application.Interfaces.Persistence.DataServices.BlogEntry;
+using NetForeMostTestBlogsProject.Infrastructure.Persistence.DataServices.BlogEntryService;
+using NetForeMostTestBlogsProject.Infrastructure.Persistence.DataServices.CategoryService;
+using NetForeMostTestBlogsProject.Application.Interfaces.Persistence.DataServices.Category;
+using NetForeMostTestBlogsProject.Api.Middleware;
 
 public class Program
 {
@@ -29,6 +34,8 @@ public class Program
             options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
         builder.Services.AddScoped<IUserService, UserService>();
+        builder.Services.AddScoped<IBlogEntryService, BlogEntryService>();
+        builder.Services.AddScoped<ICategoryService, CategoryService>();
 
         // Adds in Application dependencies
         builder.Services.AddApplication(builder.Configuration);
@@ -38,6 +45,15 @@ public class Program
         builder.Services.AddHttpContextAccessor();
         builder.Services.AddHealthChecks();
 
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("AllowLocalhostPolicy", builder =>
+            {
+                builder.WithOrigins("http://localhost:4200")
+                       .AllowAnyHeader()
+                       .AllowAnyMethod();
+            });
+        });
 
         builder.Services.AddAuthentication(options =>
         {
@@ -70,15 +86,7 @@ public class Program
 
         builder.Services.AddScoped<IPrincipalService, PrincipalService>();
 
-        builder.Services.AddCors(options =>
-        {
-            options.AddPolicy("AllowAllPolicy", builder =>
-            {
-                builder.AllowAnyOrigin()   // Permitir cualquier origen
-                       .AllowAnyHeader()   // Permitir cualquier encabezado
-                       .AllowAnyMethod();  // Permitir cualquier método (GET, POST, etc.)
-            });
-        });
+
 
 
         builder.Services.AddControllers().AddJsonOptions(options =>
@@ -114,7 +122,8 @@ public class Program
             }
             await next();
         });
-
+        app.UseCors("AllowLocalhostPolicy");
+        app.UseMiddleware<ApiKeyMiddleware>();
         app.UseAuthorization();
 
         app.MapHealthChecks("/health");

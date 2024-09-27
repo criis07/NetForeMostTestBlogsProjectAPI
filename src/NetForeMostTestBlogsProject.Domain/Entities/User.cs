@@ -17,5 +17,7 @@ namespace NetForeMostTestBlogsProject.Domain.Entities
         public string? Status { get; set; }
         public bool Active { get; set; }
         public DateTime? RegistrationDate { get; set; }
+
+        public ICollection<BlogCategory> BlogCategories { get; set; } = new List<BlogCategory>();
     }
 }

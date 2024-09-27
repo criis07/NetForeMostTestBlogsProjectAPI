@@ -12,6 +12,8 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     private readonly IDateTimeService _dateTimeService;
 
     public DbSet<User> users { get; set; } = null!;
+    public DbSet<Blog> blogs { get; set; } = null!;
+    public DbSet<Category> categories { get; set; } = null!;
 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options,
         IPrincipalService principalService,

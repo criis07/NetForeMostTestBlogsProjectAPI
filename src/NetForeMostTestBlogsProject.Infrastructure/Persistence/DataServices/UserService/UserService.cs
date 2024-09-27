@@ -165,5 +165,51 @@ namespace NetForeMostTestBlogsProject.Infrastructure.Persistence.DataServices.Us
 
                 return response;         
         }
+
+        public async Task<UpdateUserResponse> UpdateUserAsync(UpdateUserDTO userInformation)
+        {
+            var user = await _applicationDbContext.users.FirstOrDefaultAsync(c => c.Id == userInformation.id);
+            if (user != null)
+            {
+                user.Name = userInformation.Name ?? user.Name;
+                user.LastName = userInformation.LastName ?? user.LastName;
+                user.Email = userInformation.Email ?? user.Email;
+                user.Password = userInformation.Password ?? user.Password;
+                user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
+                try
+                {
+                    await _applicationDbContext.SaveChangesAsync();
+                    return new UpdateUserResponse { Success = true, Message = "Successfully updated" };
+                }
+                catch (Exception ex)
+                {
+                    // Manejar excepción (log, rethrow, etc.)
+                    return new UpdateUserResponse { Success = false, Message = "Error while updating user: " + ex.Message };
+                }
+            }
+
+            return new UpdateUserResponse { Success = false, Message = "user not found" };
+        }
+
+        public async Task<DeleteUserResponse> DeleteUserAsync(int id)
+        {
+            var user = await _applicationDbContext.users.FirstOrDefaultAsync(c => c.Id == id);
+            if (user == null)
+            {
+                return new DeleteUserResponse { Success = false, Message = "User not found" };
+            }
+
+            try
+            {
+                _applicationDbContext.users.Remove(user!);
+                await _applicationDbContext.SaveChangesAsync();
+                return new DeleteUserResponse { Success = true, Message = "Successfully deleted" };
+            }
+            catch (Exception ex)
+            {
+                // Manejar la excepción (log, rethrow, etc.)
+                return new DeleteUserResponse { Success = false, Message = "Error while deleting user: " + ex.Message };
+            }
+        }
     }
 }

@@ -48,5 +48,31 @@ namespace NetForeMostTestBlogsProject.Api.Controllers
             return result.ToActionResult();
         }
 
+        [HttpPut]
+        [Authorize]
+        [Route("/api/user/{id}")]
+        public async Task<ActionResult> UpdateUser([FromRoute] int id, [FromBody] RegisterCommand command)
+        {
+            var request = new UpdateUserCommand
+            {
+                Email = command.Email,
+                id = id,
+                Name = command.Name,
+                LastName = command.LastName,
+                Password = command.Password
+            };
+            var result = await _mediator.Send(request);
+            return result.ToActionResult();
+        }
+
+        [HttpDelete]
+        [Authorize]
+        [Route("/api/user/{id}")]
+        public async Task<ActionResult> DeleteUser([FromRoute] int id)
+        {
+            var request = new DeleteUserCommand { id = id };
+            var result = await _mediator.Send(request);
+            return result.ToActionResult();
+        }
     }
 }
