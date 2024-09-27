@@ -107,19 +107,23 @@ namespace NetForeMostTestBlogsProject.Infrastructure.Persistence.DataServices.Bl
 
         public async Task<GetBlogEntryDTO> GetBlogEntryByIdAsync(GetBlogEntryByIdQuery blogInformation)
         {
-            var blog = await _applicationDbContext.blogs.FirstOrDefaultAsync(x => x.BlogId == blogInformation.BlogId);
+            var blog = await _applicationDbContext.blogs
+                .Include(b => b.BlogCategories)
+                .Select(b => new GetBlogEntryDTO
+                {
+                    BlogId = b.BlogId,
+                    Title = b.Title,
+                    Content = b.Content,
+                    PublicationDate = b.PublicationDate.ToString("g"),
+                    UserId = b.UserId,
+                    CategoryNames = b.BlogCategories.Select(bc => bc.Category.Name)
+                }).FirstOrDefaultAsync(x => x.BlogId == blogInformation.BlogId);
+
             if (blog == null)
             {
                 return new GetBlogEntryDTO { Success = false, Message = "Blog not found" };
             }
-            return new GetBlogEntryDTO
-            {
-                BlogId = blog!.BlogId,
-                Content = blog.Content,
-                Title = blog.Title,
-                PublicationDate  = blog.PublicationDate.ToString(),
-                UserId = blog.UserId
-            };
+            return blog;
         }
 
         public async Task<UpdateBlogEntryResponse> UpdateBlogEntryAsync(UpdateBlogEntryCommand blogInformation)
