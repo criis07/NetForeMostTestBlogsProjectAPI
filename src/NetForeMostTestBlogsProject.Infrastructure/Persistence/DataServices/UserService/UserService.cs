@@ -114,6 +114,7 @@ namespace NetForeMostTestBlogsProject.Infrastructure.Persistence.DataServices.Us
                 Id = result!.Id,
                 Email = result.Email,
                 Name = result.Name,
+                LastName = result.LastName,
                 Avatar = result.Avatar,
                 Status = result.Status
             };

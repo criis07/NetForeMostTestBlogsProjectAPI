@@ -7,6 +7,7 @@ using NetForeMostTestBlogsProject.Application.Endpoints.UserAuthentication.Comma
 using NetForeMostTestBlogsProject.Api.Extensions;
 using NetForeMostTestBlogsProject.Application.Endpoints.APIs.Commands.AuthUsers;
 using Microsoft.AspNetCore.Authorization;
+using NetForeMostTestBlogsProject.Application.Endpoints.UserAuthentication.Queries;
 
 namespace NetForeMostTestBlogsProject.Api.Controllers
 {
@@ -71,6 +72,18 @@ namespace NetForeMostTestBlogsProject.Api.Controllers
         public async Task<ActionResult> DeleteUser([FromRoute] int id)
         {
             var request = new DeleteUserCommand { id = id };
+            var result = await _mediator.Send(request);
+            return result.ToActionResult();
+        }
+
+        [HttpGet]
+        [Route("/api/user/{id}")]
+        public async Task<ActionResult> GetUserInformationMethod([FromRoute] int id)
+        {         
+            var request = new GetUserInfoQuery
+            {
+                Id = id
+            };
             var result = await _mediator.Send(request);
             return result.ToActionResult();
         }
